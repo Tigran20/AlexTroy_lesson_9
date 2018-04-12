@@ -1,6 +1,9 @@
 package ru.tinkoff.ru.seminar;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -52,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private TextView resultTextView;
     private static final String UNITS_METRIC = "metric";
-    //    private static final String KEY = "f18c3ec17279ac5336f4fc2a8e28d978";
 
     //мой ключ
     private static final String KEY = "93f20bf8dbf78c7d338008fc2e4c46f4";
@@ -68,15 +70,35 @@ public class MainActivity extends AppCompatActivity {
         spinner = findViewById(R.id.spinner);
         performBtn = findViewById(R.id.performBtn);
         progressBar = findViewById(R.id.progressBar);
+
         showProgress(false);
+
         resultTextView = findViewById(R.id.resultTextView);
         performBtn.setOnClickListener(v -> performRequest(spinner.getSelectedItem().toString()));
 
+        if (!hasConnection(this)) {
+            performBtn.setEnabled(false);
+        } else {
+            performBtn.setEnabled(true);
+        }
 
     }
 
-    private void setEnablePerformButton(boolean enable) {
-        performBtn.setEnabled(enable);
+    public static boolean hasConnection(final Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (wifiInfo != null && wifiInfo.isConnected()) {
+            return true;
+        }
+        wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        if (wifiInfo != null && wifiInfo.isConnected()) {
+            return true;
+        }
+        wifiInfo = cm.getActiveNetworkInfo();
+        if (wifiInfo != null && wifiInfo.isConnected()) {
+            return true;
+        }
+        return false;
     }
 
     @SuppressLint("DefaultLocale")
@@ -99,8 +121,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void performRequest(@NonNull String city) {
-        // Здесь необходимо написать свой код.
-        // Вызываем нужные методы в нужном порядке.
         showProgress(true);
         App.getApi().getWeather(city, UNITS_METRIC, KEY).enqueue(
                 new Callback<Weather>() {
@@ -115,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onFailure(Call<Weather> call, Throwable t) {
                         Log.i("MyTAG", "onFailure");
                         showProgress(false);
-                        showError(t.getLocalizedMessage());
+                        showError("No data. Please reconnect later!");
                     }
                 });
     }
