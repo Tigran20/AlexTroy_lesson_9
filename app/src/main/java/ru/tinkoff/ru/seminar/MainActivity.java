@@ -1,9 +1,6 @@
 package ru.tinkoff.ru.seminar;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -55,7 +52,10 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private TextView resultTextView;
     private static final String UNITS_METRIC = "metric";
-    private static final String KEY = "f18c3ec17279ac5336f4fc2a8e28d978";
+    //    private static final String KEY = "f18c3ec17279ac5336f4fc2a8e28d978";
+
+    //мой ключ
+    private static final String KEY = "93f20bf8dbf78c7d338008fc2e4c46f4";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
