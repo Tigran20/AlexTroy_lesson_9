@@ -14,6 +14,7 @@ public class JsonWeatherDeserializer implements JsonDeserializer<Weather> {
     public Weather deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         Weather weather = new Weather();
         weather.city = json.getAsJsonObject().get("name").getAsString();
+        weather.name = json.getAsJsonObject().get("cod").getAsString();
         weather.description = (((json.getAsJsonObject().get("weather")).getAsJsonArray().get(0)).getAsJsonObject()).get("description").getAsString();
         weather.temp = (json.getAsJsonObject().get("main").getAsJsonObject()).get("temp").getAsFloat();
         weather.speedWind = (json.getAsJsonObject().get("wind").getAsJsonObject()).get("speed").getAsFloat();
